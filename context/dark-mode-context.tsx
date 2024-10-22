@@ -5,6 +5,7 @@ import {
   ReactNode,
   useCallback,
   useContext,
+  useEffect,
   useState,
 } from "react";
 
@@ -25,9 +26,15 @@ type TDarkModeProvider = {
   children: ReactNode;
 };
 export const DarkModeProvider = ({ children }: TDarkModeProvider) => {
-  const [isDarkMode, setIsDarkMode] = useState(
-    Boolean(JSON.parse(localStorage.getItem(DARK_MODE_KEY) || "false"))
-  );
+  const [isDarkMode, setIsDarkMode] = useState(false);
+
+  useEffect(() => {
+    const savedDarkMode = localStorage.getItem(DARK_MODE_KEY);
+    if (savedDarkMode !== null) {
+      setIsDarkMode(Boolean(JSON.parse(savedDarkMode)));
+    }
+  }, []);
+
   const toggleDarkMode = useCallback(() => {
     setIsDarkMode((prev) => !prev);
     localStorage.setItem(DARK_MODE_KEY, JSON.stringify(!isDarkMode));
